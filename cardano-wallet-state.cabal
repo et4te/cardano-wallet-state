@@ -16,7 +16,10 @@ cabal-version:       >=1.10
 executable cardano-wallet-state
   hs-source-dirs:      app, src
   main-is:             Main.hs
-  other-modules:       Launcher.CLI
+  other-modules:       Wallet.Mode
+                     , Wallet.State
+                     , Wallet.State.Acid
+                     , Wallet.State.Types
   build-depends:       acid-state
                      , ansi-wl-pprint
                      , base
