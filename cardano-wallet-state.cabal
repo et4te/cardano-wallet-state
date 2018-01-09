@@ -1,0 +1,89 @@
+name:                cardano-wallet-state
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/githubuser/cardano-wallet-state#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2017 Author name here
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+executable cardano-wallet-state
+  hs-source-dirs:      app, src
+  main-is:             Main.hs
+  other-modules:       Launcher.CLI
+  build-depends:       acid-state
+                     , ansi-wl-pprint
+                     , base
+                     , cardano-report-server >= 0.2.1
+                     , cardano-sl
+                     , cardano-sl-binary
+                     , cardano-sl-block
+                     , cardano-sl-client
+                     , cardano-sl-crypto
+                     , cardano-sl-db
+                     , cardano-sl-generator
+                     , cardano-sl-networking
+                     , cardano-sl-txp
+                     , cardano-sl-update
+                     , cardano-sl-ssc
+                     , cardano-sl-core
+                     , cardano-sl-infra
+                     , cardano-sl-util
+                     , cryptonite
+                     , data-default
+                     , directory
+                     , ether
+                     , filepath
+                     , foldl
+                     , formatting
+                     , hashable
+                     , ixset-typed
+                     , lens
+                     , lifted-async
+                     , log-warper
+                     , MonadRandom
+                     , mmorph
+                     , mtl
+                     , neat-interpolation
+                     , optparse-applicative
+                     , process
+                     , random
+                     , safecopy
+                     , safe-exceptions
+                     , silently
+                     , system-filepath
+                     , text
+                     , time-units
+                     , universum
+                     , vector
+                     , vector-builder
+  ghc-options:         -threaded -Wall -O2
+  default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
+                       RecordWildCards
+                       TupleSections
+                       TypeApplications
+                       BangPatterns
+                       ScopedTypeVariables
+                       NoImplicitPrelude
+                       ApplicativeDo
+
+  if !os(windows)
+     build-depends:    unix
+
+  if os(linux)
+     ghc-options:      -optl-fuse-ld=gold
+     ld-options:       -fuse-ld=gold
+
+  if os(windows)
+     ld-options:       -mwindows
+
+source-repository head
+  type:     git
+  location: https://github.com/githubuser/cardano-wallet-state
