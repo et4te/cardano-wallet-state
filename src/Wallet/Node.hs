@@ -24,16 +24,11 @@ import           Wallet.State.Acid (initAcidState, synchronise)
 -- Workers
 ----------------------------------------------------------------------------------------------------
 
--- In reality this will be a http server which has access to the state as it is updated by
--- the block listener callbacks. For testing I have simply added functions which generate
--- blocks from genesis secrets and checks that the tip of the chain has been advanced. The
--- actual state is expected to be updated in the onApplyBlocks callback of the BListener
--- instance derivation.
 httpWorker
   :: (HasCompileInfo, MonadWalletMode m)
   => ([WorkerSpec m], OutSpecs)
 httpWorker =
-  first pure $ worker mempty $ runHttpServer
+    first pure $ worker mempty $ runHttpServer
 
 ----------------------------------------------------------------------------------------------------
 -- Node
