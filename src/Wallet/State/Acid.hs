@@ -10,6 +10,9 @@ module Wallet.State.Acid
   , insertConstant
   , lookupConstant
   , openPersistentState
+
+  , initAcidState
+  , synchronise
   ) where
 
 import           Universum hiding (empty)
@@ -20,7 +23,7 @@ import           Data.IxSet.Typed ((@=), insert, getOne, empty)
 
 import           Pos.Binary.Class (Bi, serialize', unsafeDeserialize')
 import           Pos.Core.Common (HeaderHash)
-
+import           Mockable (Production)
 import           Wallet.State.Types (Key, Tip, IxConstantSet, ConstantEntry (..),
                                      IxDynamicSet, DynamicEntry (..),
                                      PersistentState (..))
@@ -115,4 +118,19 @@ lookupDynamic :: MonadIO m => AcidState PersistentState -> Key -> m (Maybe Dynam
 lookupDynamic acid key =
   liftIO $ query acid (AcidLookupDynamic key)
 
+-- | Initialisation.
+initAcidState :: (AcidState PersistentState -> Production ()) -> Production ()
+initAcidState f =
+  openPersistentState >>= f
+
+synchronise :: MonadIO m => AcidState PersistentState -> m ()
+synchronise acid = do
+  putText "Synchronising dynamic set ..."
+
+  -- Fetch data which has a tip
+  dynamicSet <- getDynamicSet acid
+
+  putText $ show dynamicSet
+
+  return ()
 

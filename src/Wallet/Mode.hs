@@ -26,8 +26,6 @@ import           Control.Monad.Reader (withReaderT)
 import           Control.Monad.Morph (hoist)
 import           Data.Default (def)
 import           Data.Acid (AcidState)
-import qualified Data.Text as T
-
 import           Pos.Block.BListener (MonadBListener (..))
 import           Pos.Block.Slog (HasSlogContext (..), HasSlogGState (..))
 import           Pos.Client.KeyStorage (MonadKeysRead (..), getSecretDefault)
@@ -58,9 +56,9 @@ import           Mockable (Production)
 
 import           System.Wlog (HasLoggerName (..))
 
-import           Wallet.State (TransientState(..), PersistentState(..),
-                               acquireTransientState)
-import           Wallet.State.Acid (lookupConstant)
+import           Wallet.State (PersistentState(..))
+-- import           Wallet.State.Acid (lookupConstant)
+import qualified Wallet.BlockListener as BlockListener
 
 --------------------------------------------------------------------------------
 -- Context
@@ -99,34 +97,9 @@ realModeToWallet = withReaderT wcRealModeContext
 ------------------------------------------------------------------------------
 
 instance HasConfiguration => MonadBListener WalletMode where
-  onApplyBlocks blunds = do
-    -- Acquire the wallet mode context.
-    WalletContext{..} <- ask
+  onApplyBlocks = BlockListener.onApplyBlocks
 
-    -- Acquire the persistent state used to filter the blocks.
-    userAddress <- lookupConstant wcPersistentState "<user_key>"
-
-    putText $ "[BListener] Address = " `T.append` show userAddress
-    putText $ "[BListener] Latest block = "
-
-    -- forM blunds $ \(block, _) -> do
-    --   putText $ show block
-
-    -- loadBlundsWhile (const True) blunds
-
-    -- Acquire the transient state used to build the next state.
-    -- transientState <- acquireTransientState wcTransientState
-
-    -- Filter the blocks according to the persistent state and fold onto the
-    -- existing transient state then swap the MVar to hold the updated fold.
-    -- let nextCount = foldl' (countOutputs persistentState) transientState blunds
-    -- swapMVar wcTransientState (TransientState nextCount)
-
-    pure mempty
-
-  onRollbackBlocks _ = realModeToWallet $ do
-    putText "Called onRollbackBlocks ..."
-    pure mempty
+  onRollbackBlocks = BlockListener.onRollbackBlocks
 
 instance HasConfiguration => MonadDBRead WalletMode where
   dbGet = realModeToWallet ... dbGet
