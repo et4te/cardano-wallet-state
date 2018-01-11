@@ -20,6 +20,7 @@ executable cardano-wallet-state
                      , Wallet.Node
                      , Wallet.Http
                      , Wallet.Address
+                     , Wallet.BlockGeneration
                      , Wallet.BlockListener
                      , Wallet.State
                      , Wallet.State.Acid
