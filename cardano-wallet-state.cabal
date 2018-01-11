@@ -17,6 +17,10 @@ executable cardano-wallet-state
   hs-source-dirs:      app, src
   main-is:             Main.hs
   other-modules:       Wallet.Mode
+                     , Wallet.Node
+                     , Wallet.Http
+                     , Wallet.Address
+                     , Wallet.BlockListener
                      , Wallet.State
                      , Wallet.State.Acid
                      , Wallet.State.Types
